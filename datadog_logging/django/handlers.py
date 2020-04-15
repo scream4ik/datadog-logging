@@ -26,5 +26,5 @@ class DatadogLogHandler(logging.StreamHandler):
                 f'/v1/input/{settings.DATADOG_API_KEY}',
                 json=json
             )
-        except requests.exceptions.Timeout:
+        except requests.exceptions.RequestException:
             pass
