@@ -1,6 +1,6 @@
 # Logging loggers message to Datadog using HTTP API
 
-## For now support only Django
+## For now support only Django and celery
 
 ### Basic Installation
 ```
@@ -48,4 +48,23 @@ LOGGING = {
 - `DATADOG_DOMAIN_ZONE` - `com` or `eu`
 - `DATADOG_API_KEY` - Datadog API key
 - `DATADOG_ENABLE_REQUEST_STATS` - `True` or `False`. Enable logging requests path and duration
-- `DATADOG_ENABLE_LOG_400` - `True` or `False`. Enable logging 4xx requests 
+- `DATADOG_ENABLE_LOG_400` - `True` or `False`. Enable logging 4xx requests
+
+#### Celery
+
+In your `celery.py`, or where you created celery app, you need add:
+```
+from celery.signals import after_setup_logger
+from datalog_logging.django.handlers import DatadogLogHandler
+
+
+@after_setup_logger.connect
+def setup_loggers(logger, *args, **kwargs):
+    formatter = logging.Formatter(
+        '%(levelname)s %(asctime)s %(module)s '
+        '%(process)d %(thread)d %(message)s'
+    )
+    handler = DatadogLogHandler()
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+```
