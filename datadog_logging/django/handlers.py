@@ -22,7 +22,7 @@ class DatadogLogHandler(logging.StreamHandler):
 
         try:
             requests.post(
-                f'https://http-intake.logs.datadoghq.{DATADOG_DOMAIN_ZONE}'
+                f'https://http-intake.logs.datadoghq.{settings.DATADOG_DOMAIN_ZONE}'
                 f'/v1/input/{settings.DATADOG_API_KEY}',
                 json=json
             )
